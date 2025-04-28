@@ -104,7 +104,7 @@ def lambda_handler(event, context):
         """
         # 外部のFast APIサーバーにアクセス, ユーザー入力に対する応答を取得
         ## 公開URL
-        base = "https://539e-35-247-161-145.ngrok-free.app"
+        base = "https://897b-34-143-136-147.ngrok-free.app"
         
         ## リクエストペイロードを構築
         payload = json.dumps({
@@ -124,7 +124,7 @@ def lambda_handler(event, context):
         )
         resp = urllib.request.urlopen(req)
         #print(json.load(resp))
-        assistant_response = json.load(resp)
+        assistant_response = json.load(resp)["generated_text"]
         
         # アシスタントの応答を会話履歴に追加
         messages.append({
