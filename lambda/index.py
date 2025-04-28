@@ -53,7 +53,8 @@ def lambda_handler(event, context):
             "role": "user",
             "content": message
         })
-        
+
+        """ Novaを用いる場合
         # Nova Liteモデル用のリクエストペイロードを構築
         # 会話履歴を含める
         bedrock_messages = []
@@ -99,6 +100,8 @@ def lambda_handler(event, context):
         
         # アシスタントの応答を取得
         assistant_response = response_body['output']['message']['content'][0]['text']
+        """
+        # 外部のAPIサーバーにアクセス, ユーザー入力に対する応答を取得
         
         # アシスタントの応答を会話履歴に追加
         messages.append({
