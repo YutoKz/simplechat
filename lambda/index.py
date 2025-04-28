@@ -4,6 +4,7 @@ import os
 import boto3
 import re  # 正規表現モジュールをインポート
 from botocore.exceptions import ClientError
+import json, urllib.request # 追加
 
 
 # Lambda コンテキストからリージョンを抽出する関数
@@ -101,7 +102,29 @@ def lambda_handler(event, context):
         # アシスタントの応答を取得
         assistant_response = response_body['output']['message']['content'][0]['text']
         """
-        # 外部のAPIサーバーにアクセス, ユーザー入力に対する応答を取得
+        # 外部のFast APIサーバーにアクセス, ユーザー入力に対する応答を取得
+        ## 公開URL
+        base = "https://539e-35-247-161-145.ngrok-free.app"
+        
+        ## リクエストペイロードを構築
+        payload = json.dumps({
+          "prompt": message,
+          "max_new_tokens": 512,
+          "do_sample": "true",
+          "temperature": 0.1,
+          "top_p": 0.9
+        }).encode()
+
+        ## リクエスト
+        req = urllib.request.Request(
+            url=f"{base}/generate",
+            data=payload,                           # ← ボディに詰める
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        resp = urllib.request.urlopen(req)
+        #print(json.load(resp))
+        assistant_response = json.load(resp)
         
         # アシスタントの応答を会話履歴に追加
         messages.append({
